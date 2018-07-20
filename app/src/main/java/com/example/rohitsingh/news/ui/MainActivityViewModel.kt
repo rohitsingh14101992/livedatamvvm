@@ -5,9 +5,11 @@ import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.Transformations
 import android.arch.lifecycle.ViewModel
 import android.databinding.BindingAdapter
+import android.databinding.ObservableField
 import android.support.v7.widget.RecyclerView
 import android.view.View
 import com.example.rohitsingh.news.SingleLiveEvent
+import com.example.rohitsingh.news.repository.ArticleModel
 import com.example.rohitsingh.news.repository.NewsRepository
 import com.example.rohitsingh.news.repository.TopHeadlineResponse
 import com.example.rohitsingh.news.switchMapForApiResponse
@@ -18,6 +20,8 @@ class MainActivityViewModel constructor (val newsRepository: NewsRepository) : V
     val showLoader = MutableLiveData<Int>()
     var response: LiveData<TopHeadlineResponse?>
     val loadData : SingleLiveEvent<Unit> = SingleLiveEvent()
+    val itemClickData: SingleLiveEvent<ArticleModel> = SingleLiveEvent()
+    val clickListener = ObservableField<ItemClickListener>()
 
     init {
         response = Transformations.switchMap(loadData){
@@ -30,14 +34,19 @@ class MainActivityViewModel constructor (val newsRepository: NewsRepository) : V
                 showLoader.value = View.GONE
             })
         }
+        clickListener.set(object : ItemClickListener {
+            override fun onClick(article: ArticleModel) {
+                itemClickData.value = article
+            }
+        })
     }
 
     companion object {
         @JvmStatic
-        @BindingAdapter("bind:response")
-        fun bindListAdapter(reyclerView: RecyclerView, response: TopHeadlineResponse?) {
+        @BindingAdapter("bind:response", "bind:clickListener")
+        fun bindListAdapter(reyclerView: RecyclerView, response: TopHeadlineResponse?, clickListener: ItemClickListener) {
             if (response != null)
-                reyclerView.adapter = NewsAdapter(response)
+                reyclerView.adapter = NewsAdapter(response, clickListener)
         }
     }
 }

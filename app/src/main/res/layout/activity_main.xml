@@ -25,6 +25,7 @@ xmlns:tools="http://schemas.android.com/tools">
         android:clipToPadding="false"
         app:layoutManager="android.support.v7.widget.LinearLayoutManager"
         android:overScrollMode="always"
+        bind:clickListener="@{viewModel.clickListener}"
         bind:response="@{viewModel.response}"/>
 
     <RelativeLayout

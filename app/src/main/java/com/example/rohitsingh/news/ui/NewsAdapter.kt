@@ -9,7 +9,7 @@ import android.widget.TextView
 import com.example.rohitsingh.news.repository.ArticleModel
 import com.example.rohitsingh.news.repository.TopHeadlineResponse
 
-class NewsAdapter(val topHeadlineResponse: TopHeadlineResponse) : RecyclerView.Adapter<NewsViewHolder>() {
+class NewsAdapter(val topHeadlineResponse: TopHeadlineResponse, val clickListener: ItemClickListener) : RecyclerView.Adapter<NewsViewHolder>() {
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): NewsViewHolder {
@@ -21,8 +21,13 @@ class NewsAdapter(val topHeadlineResponse: TopHeadlineResponse) : RecyclerView.A
     override fun getItemCount(): Int = topHeadlineResponse.articles.size
 
 
-    override fun onBindViewHolder(holder: NewsViewHolder, position: Int) =
-            holder.updateView(topHeadlineResponse.articles.get(position))
+    override fun onBindViewHolder(holder: NewsViewHolder, position: Int) {
+        var article = topHeadlineResponse.articles.get(position)
+        holder.updateView(article)
+        holder.itemView.setOnClickListener {
+            clickListener.onClick(article = article)
+        }
+    }
 }
 
 class NewsViewHolder(itemVIew: View) : RecyclerView.ViewHolder(itemVIew) {
@@ -35,5 +40,8 @@ class NewsViewHolder(itemVIew: View) : RecyclerView.ViewHolder(itemVIew) {
         descTv.text = article.description
     }
 
+}
 
+interface ItemClickListener {
+    fun onClick(article: ArticleModel)
 }
