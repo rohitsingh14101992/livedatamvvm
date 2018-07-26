@@ -28,6 +28,20 @@ android {
 
 ext {
     supportLibVersion = '27.1.1'  // variable that can be referenced to keep support libs consistent
+    mockitoVersion = '2.19.0'
+    jUnitVersion = '4.12'
+    mockitoKotlinVersion = '1.6.0'
+    assertjVersion = '1.7.1'
+    archVersion = '1.1.1'
+    tests = [
+            jUnit                    : "junit:junit:${jUnitVersion}",
+            mockito                  : "org.mockito:mockito-core:${mockitoVersion}",
+            mockitoInline            : "org.mockito:mockito-inline:${mockitoVersion}",
+            mockitoAndroid           : "org.mockito:mockito-android:${mockitoVersion}",
+            mokitoKotlin             : "com.nhaarman:mockito-kotlin:${mockitoKotlinVersion}",
+            assertj                  : "org.assertj:assertj-core:${assertjVersion}",
+            archore                  : "android.arch.core:core-testing:${archVersion}"
+    ]
 }
 
 dependencies {
@@ -53,7 +67,15 @@ dependencies {
     implementation "android.arch.lifecycle:extensions:1.1.1"
     implementation "android.arch.lifecycle:runtime:1.1.1"
     kapt "android.arch.lifecycle:compiler:1.1.1"
-    testImplementation 'junit:junit:4.12'
+    testImplementation tests.jUnit
+    testImplementation tests.mockito
+    testImplementation tests.archore
+    testImplementation(tests.mokitoKotlin) {
+        exclude group: "org.jetbrains.kotlin", module: "kotlin-stdlib"
+        exclude group: "org.jetbrains.kotlin", module: "kotlin-runtime"
+        exclude group: "org.jetbrains.kotlin", module: "kotlin-reflect"
+        exclude group: "org.mockito", module: "mockito-core"
+    }
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
 }
