@@ -39,6 +39,7 @@ class MainActivityViewModel constructor (val newsRepository: NewsRepository) : V
                 itemClickData.value = article
             }
         })
+        loadData.call()
     }
 
     companion object {

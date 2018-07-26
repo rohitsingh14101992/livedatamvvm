@@ -22,7 +22,6 @@ class MainActivity : AppCompatActivity() {
         AndroidInjection.inject(this)
         super.onCreate(savedInstanceState)
         initDataBinding()
-        viewModel.loadData.call()
         subscribeToNewsItemClick()
     }
 
